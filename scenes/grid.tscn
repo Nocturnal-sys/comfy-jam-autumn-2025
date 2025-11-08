@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://okiihfr7xu2h"]
+
+[node name="Grid" type="CanvasLayer"]
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 312.0
+offset_top = 56.0
+offset_right = 584.0
+offset_bottom = 328.0
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer"]
+custom_minimum_size = Vector2(256, 256)
+layout_mode = 2
+columns = 8

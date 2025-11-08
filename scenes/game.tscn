@@ -1,7 +1,15 @@
-[gd_scene load_steps=2 format=3 uid="uid://cy4dnddn2ir1m"]
+[gd_scene load_steps=4 format=3 uid="uid://cy4dnddn2ir1m"]
 
 [ext_resource type="PackedScene" uid="uid://ch0l7j3lfmkd6" path="res://scenes/background.tscn" id="1_uwrxv"]
+[ext_resource type="Script" uid="uid://f540yjuyu4fp" path="res://scripts/game_manager.gd" id="1_yqjtg"]
+[ext_resource type="PackedScene" uid="uid://okiihfr7xu2h" path="res://scenes/grid.tscn" id="3_lnu2h"]
 
 [node name="Game" type="Node2D"]
 
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_yqjtg")
+
 [node name="Background" parent="." instance=ExtResource("1_uwrxv")]
+
+[node name="Grid" parent="." instance=ExtResource("3_lnu2h")]
+unique_name_in_owner = true
