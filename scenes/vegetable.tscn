@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dbg5ethh8517u"]
+
+[ext_resource type="Script" uid="uid://d3m8x50pu8q30" path="res://scripts/vegetable.gd" id="1_wj4aq"]
+
+[node name="Vegetable" type="TextureButton"]
+script = ExtResource("1_wj4aq")
