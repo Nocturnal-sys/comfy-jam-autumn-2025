@@ -7,6 +7,7 @@
 [node name="Game" type="Node2D"]
 
 [node name="GameManager" type="Node" parent="."]
+unique_name_in_owner = true
 script = ExtResource("1_yqjtg")
 
 [node name="Background" parent="." instance=ExtResource("1_uwrxv")]
