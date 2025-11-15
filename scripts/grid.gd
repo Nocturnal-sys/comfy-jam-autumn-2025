@@ -65,7 +65,7 @@ func _check_row(i: int) -> Array[PackedVector2Array]:
 			continue
 
 		if match_group.size() >= 3:
-			matches.append(match_group)
+			matches.append(match_group.duplicate())
 
 		match_group.clear()
 		match_group.append(Vector2i(i, j))
@@ -83,7 +83,7 @@ func _check_column(j: int) -> Array[PackedVector2Array]:
 			continue
 
 		if match_group.size() >= 3:
-			matches.append(match_group)
+			matches.append(match_group.duplicate())
 
 		match_group.clear()
 		match_group.append(Vector2i(i, j))
@@ -92,6 +92,9 @@ func _check_column(j: int) -> Array[PackedVector2Array]:
 
 
 func set_matches(matches: Array[PackedVector2Array]) -> void:
+	if matches.is_empty():
+		return
+
 	for group: PackedVector2Array in matches:
 		for item: Vector2i in group:
 			_set_match(item.x, item.y)
@@ -122,3 +125,22 @@ func _update_column(j: int) -> void:
 
 	for i in count:
 		grid[i][j] = GameManager.get_new_type()
+
+
+func shuffle_grid() -> void:
+	for n in range(GRID_SIZE * GRID_SIZE - 1, 0, -1):
+		var k: int = randi_range(0, n)
+		_swap(_convert(n), _convert(k))
+
+	_update_items()
+
+
+func _swap(n: Vector2i, k: Vector2i) -> void:
+	var temp: int = grid[n.x][n.y]
+	grid[n.x][n.y] = grid[k.x][k.y]
+	grid[k.x][k.y] = temp
+
+
+func _convert(n: int) -> Vector2i:
+	@warning_ignore("integer_division")
+	return Vector2i(n / GRID_SIZE, n % GRID_SIZE)
