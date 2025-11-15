@@ -24,17 +24,25 @@ func add_items() -> void:
 			grid_container.add_child(vegetable)
 
 
-func check_matches() -> void:
+func _update_items() -> void:
+	for i in GRID_SIZE:
+		for j in GRID_SIZE:
+			var index: int = i * GRID_SIZE + j
+			var vegetable: Vegetable = grid_container.get_child(index)
+			vegetable.type = grid[i][j]
+
+
+func check_matches() -> Array[PackedVector2Array]:
 	var matches: Array[PackedVector2Array] = []
 
 	for n in GRID_SIZE:
-		matches.append_array(check_row(n))
-		matches.append_array(check_column(n))
+		matches.append_array(_check_row(n))
+		matches.append_array(_check_column(n))
 
-	set_matches(matches)
+	return matches
 
 
-func check_row(i: int) -> Array[PackedVector2Array]:
+func _check_row(i: int) -> Array[PackedVector2Array]:
 	var matches: Array[PackedVector2Array] = []
 	var match_group: PackedVector2Array = [Vector2i(i, 0)]
 
@@ -43,7 +51,7 @@ func check_row(i: int) -> Array[PackedVector2Array]:
 			match_group.append(Vector2i(i, j))
 			continue
 
-		if len(match_group) >= 3:
+		if match_group.size() >= 3:
 			matches.append(match_group)
 
 		match_group.clear()
@@ -52,7 +60,7 @@ func check_row(i: int) -> Array[PackedVector2Array]:
 	return matches
 
 
-func check_column(j: int) -> Array[PackedVector2Array]:
+func _check_column(j: int) -> Array[PackedVector2Array]:
 	var matches: Array[PackedVector2Array] = []
 	var match_group: PackedVector2Array = [Vector2i(0, j)]
 
@@ -61,7 +69,7 @@ func check_column(j: int) -> Array[PackedVector2Array]:
 			match_group.append(Vector2i(i, j))
 			continue
 
-		if len(match_group) >= 3:
+		if match_group.size() >= 3:
 			matches.append(match_group)
 
 		match_group.clear()
@@ -73,9 +81,29 @@ func check_column(j: int) -> Array[PackedVector2Array]:
 func set_matches(matches: Array[PackedVector2Array]) -> void:
 	for group: PackedVector2Array in matches:
 		for item: Vector2i in group:
-			set_match(item.x, item.y)
+			_set_match(item.x, item.y)
 
 
-func set_match(i: int, j: int) -> void:
+func _set_match(i: int, j: int) -> void:
 	var current: int = grid[i][j]
 	grid[i][j] = current - 1 if current < 0 else -1
+
+
+func update_grid() -> void:
+	for n in GRID_SIZE:
+		_update_column(n)
+
+	_update_items()
+
+
+func _update_column(j: int) -> void:
+	var count: int = 0
+
+	for i in range(GRID_SIZE - 1, -1, -1):
+		if grid[i][j] < 0:
+			count += 1
+		elif count > 0:
+			grid[i + count][j] = grid[i][j]
+
+	for i in count:
+		grid[i][j] = GameManager.get_new_type()
