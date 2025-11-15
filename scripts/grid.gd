@@ -5,23 +5,27 @@ extends CanvasLayer
 const GRID_SIZE: int = 8
 var grid: Array[PackedInt32Array] = []
 
+signal grid_updated
+
 
 func _ready() -> void:
 	grid_container.set_columns(GRID_SIZE)
-	add_items()
+	_add_items()
 
 
 func _process(_delta: float) -> void:
 	pass
 
 
-func add_items() -> void:
+func _add_items() -> void:
 	for i in GRID_SIZE:
 		grid.append(PackedInt32Array())
 		for j in GRID_SIZE:
 			var vegetable: Vegetable = Vegetable.new()
 			grid[i].append(vegetable.type)
 			grid_container.add_child(vegetable)
+
+	grid_updated.emit()
 
 
 func _update_items() -> void:
@@ -30,6 +34,15 @@ func _update_items() -> void:
 			var index: int = i * GRID_SIZE + j
 			var vegetable: Vegetable = grid_container.get_child(index)
 			vegetable.type = grid[i][j]
+
+	grid_updated.emit()
+
+
+func _on_grid_updated() -> void:
+	var matches: Array[PackedVector2Array] = check_matches()
+
+	if not matches.is_empty():
+		set_matches(matches)
 
 
 func check_matches() -> Array[PackedVector2Array]:
@@ -83,13 +96,15 @@ func set_matches(matches: Array[PackedVector2Array]) -> void:
 		for item: Vector2i in group:
 			_set_match(item.x, item.y)
 
+	_update_grid()
+
 
 func _set_match(i: int, j: int) -> void:
 	var current: int = grid[i][j]
 	grid[i][j] = current - 1 if current < 0 else -1
 
 
-func update_grid() -> void:
+func _update_grid() -> void:
 	for n in GRID_SIZE:
 		_update_column(n)
 
