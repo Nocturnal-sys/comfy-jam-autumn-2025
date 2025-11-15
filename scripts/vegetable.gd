@@ -1,11 +1,24 @@
 class_name Vegetable
 extends TextureButton
 
-const SPRITE = preload("res://assets/sprite.png")
+var type: int
+
+const SPRITES: Array[CompressedTexture2D] = [
+	preload("res://assets/sprite.png"),
+	preload("res://assets/sprite.png"),
+	preload("res://assets/sprite.png"),
+	preload("res://assets/sprite.png"),
+	preload("res://assets/sprite.png"),
+	preload("res://assets/sprite.png"),
+	preload("res://assets/sprite.png")
+]
+
+const NUM_SPRITES: int = len(SPRITES)
 
 
 func _init() -> void:
-	set_texture_normal(SPRITE)
+	type = randi() % NUM_SPRITES
+	set_texture_normal(SPRITES[type])
 
 
 func _ready() -> void:
