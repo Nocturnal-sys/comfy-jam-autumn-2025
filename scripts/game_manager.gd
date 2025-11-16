@@ -22,15 +22,7 @@ enum State {
 var current_state: State = State.WAITING
 var selected_index: int = -1
 var selected_type: int = -1
-var highlighted: Array[int] = []
-
-
-func _ready() -> void:
-	pass
-
-
-func _process(_delta: float) -> void:
-	pass
+var highlighted: PackedInt32Array = []
 
 
 func get_new_type() -> int:

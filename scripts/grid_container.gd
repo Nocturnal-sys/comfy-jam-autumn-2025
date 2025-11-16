@@ -1,6 +1,12 @@
+class_name Grid
 extends GridContainer
 
 const GRID_SIZE: int = GameManager.GRID_SIZE
+const AXES: Array[PackedVector2Array] = [
+	[Vector2i.LEFT, Vector2i.RIGHT],
+	[Vector2i.UP, Vector2i.DOWN]
+]
+
 var grid: Array[PackedInt32Array] = []
 
 signal grid_updated
@@ -9,10 +15,6 @@ signal grid_updated
 func _ready() -> void:
 	set_columns(GRID_SIZE)
 	_add_items()
-
-
-func _process(_delta: float) -> void:
-	pass
 
 
 func _add_items() -> void:
@@ -32,10 +34,15 @@ func _update_items() -> void:
 	for i in GRID_SIZE:
 		for j in GRID_SIZE:
 			var index: int = i * GRID_SIZE + j
-			var vegetable: Vegetable = get_child(index)
-			vegetable.type = grid[i][j]
+			var vegetable: Vegetable = get_vegetable(index)
+			if vegetable.type != grid[i][j]:
+				vegetable.type = grid[i][j]
 
 	grid_updated.emit()
+
+
+func get_vegetable(index: int) -> Vegetable:
+	return get_child(index)
 
 
 func _on_grid_updated() -> void:
@@ -145,12 +152,9 @@ func _try_swap(a: Vector2i, b: Vector2i) -> bool:
 
 
 func _check_local_matches(start: Vector2i) -> bool:
-	for axis in [
-		[Vector2i.LEFT, Vector2i.RIGHT],
-		[Vector2i.UP, Vector2i.DOWN]
-	]:
+	for axis: PackedVector2Array in AXES:
 		var count: int = 0
-		for direction in axis:
+		for direction: Vector2i in axis:
 			count += _check_direction(start, direction)
 			if count >= 2: return true
 
@@ -173,8 +177,8 @@ func _check_match(a: Vector2i, b: Vector2i) -> bool:
 
 
 func reset_grid() -> void:
-	for i in GameManager.highlighted:
-		get_child(i).set_highlight(false)
+	for index in GameManager.highlighted:
+		get_vegetable(index).set_highlight(false)
 
 
 func shuffle_grid() -> void:
