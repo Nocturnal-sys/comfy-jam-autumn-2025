@@ -1,9 +1,8 @@
 [gd_scene load_steps=2 format=3 uid="uid://okiihfr7xu2h"]
 
-[ext_resource type="Script" uid="uid://c6ecnw5t0s3tp" path="res://scripts/grid.gd" id="1_t5fjg"]
+[ext_resource type="Script" uid="uid://b242f0oni2gha" path="res://scripts/grid_container.gd" id="2_w88cy"]
 
 [node name="Grid" type="CanvasLayer"]
-script = ExtResource("1_t5fjg")
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
 anchors_preset = 8
@@ -23,11 +22,11 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
 [node name="GridContainer" type="GridContainer" parent="MarginContainer"]
-unique_name_in_owner = true
 custom_minimum_size = Vector2(256, 256)
 layout_mode = 2
 theme_override_constants/h_separation = 0
 theme_override_constants/v_separation = 0
 columns = 8
+script = ExtResource("2_w88cy")
 
-[connection signal="grid_updated" from="." to="." method="_on_grid_updated"]
+[connection signal="grid_updated" from="MarginContainer/GridContainer" to="MarginContainer/GridContainer" method="_on_grid_updated"]

@@ -1,6 +1,4 @@
-extends CanvasLayer
-
-@onready var grid_container: GridContainer = %GridContainer
+extends GridContainer
 
 const GRID_SIZE: int = GameManager.GRID_SIZE
 var grid: Array[PackedInt32Array] = []
@@ -9,7 +7,7 @@ signal grid_updated
 
 
 func _ready() -> void:
-	grid_container.set_columns(GRID_SIZE)
+	set_columns(GRID_SIZE)
 	_add_items()
 
 
@@ -23,16 +21,18 @@ func _add_items() -> void:
 		for j in GRID_SIZE:
 			var vegetable: Vegetable = Vegetable.new()
 			grid[i].append(vegetable.type)
-			grid_container.add_child(vegetable)
+			add_child(vegetable)
 
 	grid_updated.emit()
 
 
 func _update_items() -> void:
+	GameManager.set_waiting()
+
 	for i in GRID_SIZE:
 		for j in GRID_SIZE:
 			var index: int = i * GRID_SIZE + j
-			var vegetable: Vegetable = grid_container.get_child(index)
+			var vegetable: Vegetable = get_child(index)
 			vegetable.type = grid[i][j]
 
 	grid_updated.emit()
@@ -129,9 +129,52 @@ func _update_column(j: int) -> void:
 		grid[i][j] = GameManager.get_new_type()
 
 
-func _on_swap_ready(a: int, b: int) -> void:
-	_swap(_convert(a), _convert(b))
-	_update_items()
+func try_swap(a: int, b: int) -> void:
+	reset_grid()
+	if _try_swap(_convert(a), _convert(b)):
+		_update_items()
+
+
+func _try_swap(a: Vector2i, b: Vector2i) -> bool:
+	_swap(a, b)
+	if _check_local_matches(a) or _check_local_matches(b):
+		return true
+	else:
+		_swap(a, b)
+		return false
+
+
+func _check_local_matches(start: Vector2i) -> bool:
+	for axis in [
+		[Vector2i.LEFT, Vector2i.RIGHT],
+		[Vector2i.UP, Vector2i.DOWN]
+	]:
+		var count: int = 0
+		for direction in axis:
+			count += _check_direction(start, direction)
+			if count >= 2: return true
+
+	return false
+
+
+func _check_direction(start: Vector2i, direction: Vector2i) -> int:
+	var count: int = 0
+	var next: Vector2i = start + direction
+
+	while next >= Vector2i.ZERO and _check_match(start, next):
+		count += 1
+		next += direction
+
+	return count
+
+
+func _check_match(a: Vector2i, b: Vector2i) -> bool:
+	return grid[a.x][a.y] == grid[b.x][b.y]
+
+
+func reset_grid() -> void:
+	for i in GameManager.highlighted:
+		get_child(i).set_highlight(false)
 
 
 func shuffle_grid() -> void:
@@ -142,10 +185,10 @@ func shuffle_grid() -> void:
 	_update_items()
 
 
-func _swap(n: Vector2i, k: Vector2i) -> void:
-	var temp: int = grid[n.x][n.y]
-	grid[n.x][n.y] = grid[k.x][k.y]
-	grid[k.x][k.y] = temp
+func _swap(a: Vector2i, b: Vector2i) -> void:
+	var temp: int = grid[a.x][a.y]
+	grid[a.x][a.y] = grid[b.x][b.y]
+	grid[b.x][b.y] = temp
 
 
 func _convert(n: int) -> Vector2i:

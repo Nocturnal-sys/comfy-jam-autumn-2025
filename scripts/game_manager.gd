@@ -14,16 +14,15 @@ const NUM_SPRITES: int = len(SPRITES)
 const GRID_SIZE: int = 8
 
 enum State {
+	WAITING,
 	READY,
-	SELECTED,
-	WAITING
+	SELECTED
 }
 
 var current_state: State = State.WAITING
 var selected_index: int = -1
+var selected_type: int = -1
 var highlighted: Array[int] = []
-
-signal swap_ready(a: int, b: int)
 
 
 func _ready() -> void:
@@ -38,24 +37,24 @@ func get_new_type() -> int:
 	return randi() % NUM_SPRITES
 
 
-func swap(index: int) -> void:
-	if selected_index < 0 or index < 0:
-		return
-
-	swap_ready.emit(selected_index, index)
+func set_waiting() -> void:
+	current_state = State.WAITING
+	reset_selected()
 
 
 func set_ready() -> void:
 	current_state = State.READY
-	selected_index = -1
-	highlighted = []
+	reset_selected()
 
 
 func set_selected(vegetable: Vegetable) -> void:
 	current_state = State.SELECTED
 	selected_index = vegetable.index
+	selected_type = vegetable.type
 	highlighted = vegetable.adjacent.duplicate()
 
 
-func set_waiting() -> void:
-	current_state = State.WAITING
+func reset_selected() -> void:
+	selected_index = -1
+	selected_type = -1
+	highlighted = []
