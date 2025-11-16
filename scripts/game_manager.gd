@@ -10,6 +10,26 @@ const SPRITES: Array[CompressedTexture2D] = [
 	preload("res://assets/sprites/squash.png")
 ]
 
+const SPRITES_HIGHLIGHT: Array[CompressedTexture2D] = [
+	preload("res://assets/sprites/carrot-highlight.png"),
+	preload("res://assets/sprites/leek-highlight.png"),
+	preload("res://assets/sprites/mushroom-highlight.png"),
+	preload("res://assets/sprites/onion-highlight.png"),
+	preload("res://assets/sprites/potato-highlight.png"),
+	preload("res://assets/sprites/pumpkin-highlight.png"),
+	preload("res://assets/sprites/squash-highlight.png")
+]
+
+const SPRITES_SELECT: Array[CompressedTexture2D] = [
+	preload("res://assets/sprites/carrot-select.png"),
+	preload("res://assets/sprites/leek-select.png"),
+	preload("res://assets/sprites/mushroom-select.png"),
+	preload("res://assets/sprites/onion-select.png"),
+	preload("res://assets/sprites/potato-select.png"),
+	preload("res://assets/sprites/pumpkin-select.png"),
+	preload("res://assets/sprites/squash-select.png")
+]
+
 const NUM_SPRITES: int = len(SPRITES)
 const GRID_SIZE: int = 8
 

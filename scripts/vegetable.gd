@@ -21,6 +21,8 @@ func _ready() -> void:
 func update_type(new_type: int) -> void:
 	type = new_type
 	set_texture_normal(GameManager.SPRITES[type])
+	set_texture_hover(GameManager.SPRITES_HIGHLIGHT[type])
+	set_texture_focused(GameManager.SPRITES_SELECT[type])
 
 
 func _on_pressed() -> void:
