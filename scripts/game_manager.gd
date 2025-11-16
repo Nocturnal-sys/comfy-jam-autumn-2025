@@ -40,6 +40,7 @@ enum State {
 }
 
 var current_state: State = State.WAITING
+var selected: Vegetable = null
 var selected_index: int = -1
 var selected_type: int = -1
 var highlighted: PackedInt32Array = PackedInt32Array()
@@ -63,12 +64,8 @@ func set_ready() -> void:
 
 func set_selected(vegetable: Vegetable) -> void:
 	current_state = State.SELECTED
-	selected_index = vegetable.index
-	selected_type = vegetable.type
-	highlighted = vegetable.adjacent.duplicate()
+	selected = vegetable
 
 
 func reset_selected() -> void:
-	selected_index = -1
-	selected_type = -1
-	highlighted.clear()
+	selected = null

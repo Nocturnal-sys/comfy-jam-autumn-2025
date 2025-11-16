@@ -33,8 +33,8 @@ func _on_pressed() -> void:
 			GameManager.set_selected(self)
 
 		GameManager.State.SELECTED:
-			if (highlighted and type != GameManager.selected_type):
-				parent.try_swap(index, GameManager.selected_index)
+			if highlighted:
+				parent.try_swap(self)
 				return
 
 			parent.reset_grid()

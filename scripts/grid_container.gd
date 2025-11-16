@@ -144,9 +144,38 @@ func _update_column(j: int) -> void:
 		grid[i][j] = GameManager.get_new_type()
 
 
-func try_swap(a: int, b: int) -> void:
+func try_swap(vegetable: Vegetable) -> void:
 	reset_grid()
-	if _try_swap(_convert(a), _convert(b)):
+	if (
+		vegetable.type == GameManager.selected.type
+		or not _try_swap(
+			_convert(vegetable.index),
+			_convert(GameManager.selected.index)
+		)
+	):
+		AnimationManager.swap(vegetable, GameManager.selected)
+		await AnimationManager.swap_finished
+
+		var temp: int = vegetable.type
+		vegetable.update_type(GameManager.selected.type)
+		GameManager.selected.update_type(temp)
+
+		AnimationManager.swap(vegetable, GameManager.selected)
+		await AnimationManager.swap_finished
+
+		temp = vegetable.type
+		vegetable.update_type(GameManager.selected.type)
+		GameManager.selected.update_type(temp)
+
+		GameManager.set_ready()
+	else:
+		AnimationManager.swap(vegetable, GameManager.selected)
+		await AnimationManager.swap_finished
+
+		var temp: int = vegetable.type
+		vegetable.update_type(GameManager.selected.type)
+		GameManager.selected.update_type(temp)
+
 		_update_items()
 
 
@@ -190,7 +219,7 @@ func _check_match(a: Vector2i, b: Vector2i) -> bool:
 
 
 func reset_grid() -> void:
-	for index in GameManager.highlighted:
+	for index in GameManager.selected.adjacent:
 		get_vegetable(index).set_highlight(false)
 
 

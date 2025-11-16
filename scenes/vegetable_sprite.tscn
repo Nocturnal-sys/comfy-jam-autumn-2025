@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1lqjf03ljg54"]
+
+[ext_resource type="Script" uid="uid://cntju8fml1ap4" path="res://scripts/vegetable_sprite.gd" id="1_rs5ka"]
+
+[node name="VegetableSprite" type="Sprite2D"]
+centered = false
+script = ExtResource("1_rs5ka")
