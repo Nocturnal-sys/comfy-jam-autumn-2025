@@ -1,26 +1,26 @@
 class_name Vegetable
 extends TextureButton
 
-const OFFSETS: PackedInt32Array = [
-	-1, 1, -GameManager.GRID_SIZE, GameManager.GRID_SIZE
-]
-
 var type: int
 var index: int
 var parent: Grid
 var highlighted: bool
-var adjacent: PackedInt32Array = []
+var adjacent: PackedInt32Array = PackedInt32Array()
 
 
 func _init() -> void:
-	type = GameManager.get_new_type()
+	update_type(GameManager.get_new_type())
 	highlighted = false
-	set_texture_normal(GameManager.SPRITES[type])
 
 
 func _ready() -> void:
 	index = get_index()
 	parent = get_parent()
+
+
+func update_type(new_type: int) -> void:
+	type = new_type
+	set_texture_normal(GameManager.SPRITES[type])
 
 
 func _on_pressed() -> void:
@@ -48,11 +48,11 @@ func _highlight_adjacent() -> void:
 		parent.get_vegetable(i).set_highlight(true)
 
 
-func _get_adjacent() -> Array[int]:
+func _get_adjacent() -> PackedInt32Array:
 	if adjacent.size() > 0:
 		return adjacent
 
-	for offset in OFFSETS:
+	for offset: int in GameManager.offsets:
 		var i: int = index + offset
 		if _is_in_range(i):
 			adjacent.append(i)

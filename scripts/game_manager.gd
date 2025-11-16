@@ -1,13 +1,13 @@
 extends Node
 
 const SPRITES: Array[CompressedTexture2D] = [
-	preload("res://assets/sprite.png"),
-	preload("res://assets/sprite.png"),
-	preload("res://assets/sprite.png"),
-	preload("res://assets/sprite.png"),
-	preload("res://assets/sprite.png"),
-	preload("res://assets/sprite.png"),
-	preload("res://assets/sprite.png")
+	preload("res://assets/sprites/carrot.png"),
+	preload("res://assets/sprites/leek.png"),
+	preload("res://assets/sprites/mushroom.png"),
+	preload("res://assets/sprites/onion.png"),
+	preload("res://assets/sprites/potato.png"),
+	preload("res://assets/sprites/pumpkin.png"),
+	preload("res://assets/sprites/squash.png")
 ]
 
 const NUM_SPRITES: int = len(SPRITES)
@@ -22,8 +22,10 @@ enum State {
 var current_state: State = State.WAITING
 var selected_index: int = -1
 var selected_type: int = -1
-var highlighted: PackedInt32Array = []
-
+var highlighted: PackedInt32Array = PackedInt32Array()
+var offsets: PackedInt32Array = PackedInt32Array([
+	-1, 1, -GRID_SIZE, GRID_SIZE
+])
 
 func get_new_type() -> int:
 	return randi() % NUM_SPRITES
@@ -49,4 +51,4 @@ func set_selected(vegetable: Vegetable) -> void:
 func reset_selected() -> void:
 	selected_index = -1
 	selected_type = -1
-	highlighted = []
+	highlighted.clear()

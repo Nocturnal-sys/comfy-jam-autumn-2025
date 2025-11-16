@@ -1,13 +1,15 @@
 class_name Grid
 extends GridContainer
 
+const VEGETABLE: PackedScene = preload("res://scenes/vegetable.tscn")
 const GRID_SIZE: int = GameManager.GRID_SIZE
-const AXES: Array[PackedVector2Array] = [
-	[Vector2i.LEFT, Vector2i.RIGHT],
-	[Vector2i.UP, Vector2i.DOWN]
-]
 
 var grid: Array[PackedInt32Array] = []
+
+var axes: Array[PackedVector2Array] = [
+	PackedVector2Array([Vector2i.LEFT, Vector2i.RIGHT]),
+	PackedVector2Array([Vector2i.UP, Vector2i.DOWN])
+]
 
 signal grid_updated
 
@@ -21,7 +23,7 @@ func _add_items() -> void:
 	for i in GRID_SIZE:
 		grid.append(PackedInt32Array())
 		for j in GRID_SIZE:
-			var vegetable: Vegetable = Vegetable.new()
+			var vegetable: Vegetable = VEGETABLE.instantiate()
 			grid[i].append(vegetable.type)
 			add_child(vegetable)
 
@@ -36,7 +38,7 @@ func _update_items() -> void:
 			var index: int = i * GRID_SIZE + j
 			var vegetable: Vegetable = get_vegetable(index)
 			if vegetable.type != grid[i][j]:
-				vegetable.type = grid[i][j]
+				vegetable.update_type(grid[i][j])
 
 	grid_updated.emit()
 
@@ -66,7 +68,7 @@ func check_matches() -> Array[PackedVector2Array]:
 
 func _check_row(i: int) -> Array[PackedVector2Array]:
 	var matches: Array[PackedVector2Array] = []
-	var match_group: PackedVector2Array = [Vector2i(i, 0)]
+	var match_group: PackedVector2Array = PackedVector2Array([Vector2i(i, 0)])
 
 	for j in range(1, GRID_SIZE):
 		if grid[i][j - 1] == grid[i][j]:
@@ -84,7 +86,7 @@ func _check_row(i: int) -> Array[PackedVector2Array]:
 
 func _check_column(j: int) -> Array[PackedVector2Array]:
 	var matches: Array[PackedVector2Array] = []
-	var match_group: PackedVector2Array = [Vector2i(0, j)]
+	var match_group: PackedVector2Array = PackedVector2Array([Vector2i(0, j)])
 
 	for i in range(1, GRID_SIZE):
 		if grid[i - 1][j] == grid[i][j]:
@@ -152,7 +154,7 @@ func _try_swap(a: Vector2i, b: Vector2i) -> bool:
 
 
 func _check_local_matches(start: Vector2i) -> bool:
-	for axis: PackedVector2Array in AXES:
+	for axis: PackedVector2Array in axes:
 		var count: int = 0
 		for direction: Vector2i in axis:
 			count += _check_direction(start, direction)
@@ -165,7 +167,12 @@ func _check_direction(start: Vector2i, direction: Vector2i) -> int:
 	var count: int = 0
 	var next: Vector2i = start + direction
 
-	while next >= Vector2i.ZERO and _check_match(start, next):
+	while (
+		next.x >= 0 and next.y >= 0
+		and next.x < GRID_SIZE
+		and next.y < GRID_SIZE
+		and _check_match(start, next)
+	):
 		count += 1
 		next += direction
 
