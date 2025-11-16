@@ -14,3 +14,5 @@ script = ExtResource("1_yqjtg")
 
 [node name="Grid" parent="." instance=ExtResource("3_lnu2h")]
 unique_name_in_owner = true
+
+[connection signal="swap_ready" from="GameManager" to="Grid" method="_on_swap_ready"]

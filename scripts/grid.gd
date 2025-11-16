@@ -2,7 +2,7 @@ extends CanvasLayer
 
 @onready var grid_container: GridContainer = %GridContainer
 
-const GRID_SIZE: int = 8
+const GRID_SIZE: int = GameManager.GRID_SIZE
 var grid: Array[PackedInt32Array] = []
 
 signal grid_updated
@@ -41,8 +41,10 @@ func _update_items() -> void:
 func _on_grid_updated() -> void:
 	var matches: Array[PackedVector2Array] = check_matches()
 
-	if not matches.is_empty():
+	if matches.size() > 0:
 		set_matches(matches)
+	else:
+		GameManager.set_ready()
 
 
 func check_matches() -> Array[PackedVector2Array]:
@@ -125,6 +127,11 @@ func _update_column(j: int) -> void:
 
 	for i in count:
 		grid[i][j] = GameManager.get_new_type()
+
+
+func _on_swap_ready(a: int, b: int) -> void:
+	_swap(_convert(a), _convert(b))
+	_update_items()
 
 
 func shuffle_grid() -> void:
