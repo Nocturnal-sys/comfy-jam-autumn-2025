@@ -81,6 +81,9 @@ func _check_row(i: int) -> Array[PackedVector2Array]:
 		match_group.clear()
 		match_group.append(Vector2i(i, j))
 
+	if match_group.size() >= 3:
+		matches.append(match_group.duplicate())
+
 	return matches
 
 
@@ -98,6 +101,9 @@ func _check_column(j: int) -> Array[PackedVector2Array]:
 
 		match_group.clear()
 		match_group.append(Vector2i(i, j))
+
+	if match_group.size() >= 3:
+		matches.append(match_group.duplicate())
 
 	return matches
 
