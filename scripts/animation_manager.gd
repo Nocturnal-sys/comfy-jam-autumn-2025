@@ -2,6 +2,7 @@ extends Node
 
 const SPRITE: PackedScene = preload("res://scenes/vegetable_sprite.tscn")
 const SPEED: float = 0.25
+const SOUP_POSITION: Vector2 = Vector2(100, 100)
 
 signal swap_finished
 signal drop_finished
@@ -43,6 +44,7 @@ func swap(a: Vegetable, b: Vegetable) -> void:
 
 func drop(type: int, start: Vector2, dest: Vegetable, dist: int) -> void:
 	dest.set_disabled(true)
+	throw(dest.type, dest.global_position)
 
 	var tween: Tween = create_sprite(type, start, dest.global_position, dist)
 	await tween.finished
@@ -50,6 +52,12 @@ func drop(type: int, start: Vector2, dest: Vegetable, dist: int) -> void:
 	dest.update_type(type)
 	dest.set_disabled(false)
 
+	_check_children()
+
+
+func throw(type: int, start: Vector2) -> void:
+	var tween: Tween = create_sprite(type, start, SOUP_POSITION, 2)
+	await tween.finished
 	_check_children()
 
 
