@@ -156,25 +156,13 @@ func try_swap(vegetable: Vegetable) -> void:
 		AnimationManager.swap(vegetable, GameManager.selected)
 		await AnimationManager.swap_finished
 
-		var temp: int = vegetable.type
-		vegetable.update_type(GameManager.selected.type)
-		GameManager.selected.update_type(temp)
-
 		AnimationManager.swap(vegetable, GameManager.selected)
 		await AnimationManager.swap_finished
-
-		temp = vegetable.type
-		vegetable.update_type(GameManager.selected.type)
-		GameManager.selected.update_type(temp)
 
 		GameManager.set_ready()
 	else:
 		AnimationManager.swap(vegetable, GameManager.selected)
 		await AnimationManager.swap_finished
-
-		var temp: int = vegetable.type
-		vegetable.update_type(GameManager.selected.type)
-		GameManager.selected.update_type(temp)
 
 		_update_items()
 

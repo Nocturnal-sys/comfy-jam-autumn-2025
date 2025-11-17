@@ -30,6 +30,9 @@ const SPRITES_SELECT: Array[CompressedTexture2D] = [
 	preload("res://assets/sprites/squash-select.png")
 ]
 
+const SPRITE_DISABLED: CompressedTexture2D = \
+	preload("res://assets/sprites/transparent.png")
+
 const NUM_SPRITES: int = len(SPRITES)
 const GRID_SIZE: int = 8
 

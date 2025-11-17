@@ -10,6 +10,7 @@ var adjacent: PackedInt32Array = PackedInt32Array()
 
 func _init() -> void:
 	update_type(GameManager.get_new_type())
+	set_texture_disabled(GameManager.SPRITE_DISABLED)
 	highlighted = false
 
 
