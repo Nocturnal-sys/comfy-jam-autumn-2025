@@ -1,5 +1,6 @@
-[gd_scene load_steps=24 format=3 uid="uid://chn6qjqgx1aqc"]
+[gd_scene load_steps=26 format=3 uid="uid://chn6qjqgx1aqc"]
 
+[ext_resource type="Script" uid="uid://dbkpobhrlpgyd" path="res://scripts/start_screen.gd" id="1_5pab1"]
 [ext_resource type="Texture2D" uid="uid://cubiuoj0cb5" path="res://assets/sprites/soup.png" id="1_o7i0r"]
 [ext_resource type="Texture2D" uid="uid://cxxrg7w8je0p0" path="res://assets/sprites/soup_bunny.png" id="1_r2jwc"]
 [ext_resource type="PackedScene" uid="uid://bwc8g5aa0tvlk" path="res://scenes/button_template.tscn" id="2_he1sj"]
@@ -144,13 +145,30 @@ tracks/0/keys = {
 "values": [Color(1, 1, 1, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_o30b1"]
+resource_name = "fade_out"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Node2D:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_o30b1"]
 _data = {
 &"RESET": SubResource("Animation_5pab1"),
-&"fade_in": SubResource("Animation_hm208")
+&"fade_in": SubResource("Animation_hm208"),
+&"fade_out": SubResource("Animation_o30b1")
 }
 
 [node name="StartScreen" type="Node2D"]
+script = ExtResource("1_5pab1")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 offset_right = 640.0
@@ -213,5 +231,7 @@ libraries = {
 &"": SubResource("AnimationLibrary_o30b1")
 }
 autoplay = "fade_in"
+
+[connection signal="pressed" from="Node2D/PlayButton" to="." method="_on_play_button_pressed"]
 
 [editable path="Node2D/PlayButton"]
