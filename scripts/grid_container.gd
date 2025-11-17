@@ -31,11 +31,9 @@ func _add_items() -> void:
 
 
 func _update_items() -> void:
-	GameManager.set_waiting()
-
 	for i in GRID_SIZE:
 		for j in GRID_SIZE:
-			var index: int = i * GRID_SIZE + j
+			var index: int = _get_index(i, j)
 			var vegetable: Vegetable = get_vegetable(index)
 			if vegetable.type != grid[i][j]:
 				vegetable.update_type(grid[i][j])
@@ -128,6 +126,8 @@ func _update_grid() -> void:
 	for n in GRID_SIZE:
 		_update_column(n)
 
+	GameManager.set_waiting()
+	await AnimationManager.drop_finished
 	_update_items()
 
 
@@ -139,9 +139,31 @@ func _update_column(j: int) -> void:
 			count += 1
 		elif count > 0:
 			grid[i + count][j] = grid[i][j]
+			_drop(grid[i][j], i, j, count)
 
 	for i in count:
 		grid[i][j] = GameManager.get_new_type()
+		_drop(grid[i][j], i - count, j, count)
+
+
+func _drop(type: int, i: int, j: int, count: int) -> void:
+	var start: Vector2 = _get_global_position(i, j)
+	var dest: Vegetable = get_vegetable(_get_index(i + count, j))
+
+	AnimationManager.drop(type, start, dest, count)
+
+
+func _get_global_position(i: int, j: int) -> Vector2:
+	if i >= 0:
+		return get_vegetable(_get_index(i, j)).global_position
+
+	var drop_position: Vector2 = _get_global_position(0, j)
+	drop_position.y += i * GameManager.SPRITE_SIZE
+	return drop_position
+
+
+func _get_index(i: int, j: int) -> int:
+	return i * GRID_SIZE + j
 
 
 func try_swap(vegetable: Vegetable) -> void:
@@ -156,26 +178,15 @@ func try_swap(vegetable: Vegetable) -> void:
 		AnimationManager.swap(vegetable, GameManager.selected)
 		await AnimationManager.swap_finished
 
-		var temp: int = vegetable.type
-		vegetable.update_type(GameManager.selected.type)
-		GameManager.selected.update_type(temp)
-
 		AnimationManager.swap(vegetable, GameManager.selected)
 		await AnimationManager.swap_finished
-
-		temp = vegetable.type
-		vegetable.update_type(GameManager.selected.type)
-		GameManager.selected.update_type(temp)
 
 		GameManager.set_ready()
 	else:
 		AnimationManager.swap(vegetable, GameManager.selected)
 		await AnimationManager.swap_finished
 
-		var temp: int = vegetable.type
-		vegetable.update_type(GameManager.selected.type)
-		GameManager.selected.update_type(temp)
-
+		GameManager.set_ready()
 		_update_items()
 
 
